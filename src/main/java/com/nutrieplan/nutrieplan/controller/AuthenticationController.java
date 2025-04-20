@@ -17,6 +17,7 @@ import com.nutrieplan.nutrieplan.entity.user.User;
 import com.nutrieplan.nutrieplan.entity.user.UserRole;
 import com.nutrieplan.nutrieplan.repositories.UserRepository;
 import com.nutrieplan.nutrieplan.security.TokenService;
+import com.nutrieplan.nutrieplan.services.UserService;
 
 import jakarta.validation.Valid;
 import lombok.var;
@@ -33,6 +34,9 @@ public class AuthenticationController {
     @Autowired
     TokenService tokenService;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody AuthenticationDTO data) {
 
@@ -47,16 +51,8 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity resgister(@Valid @RequestBody RegisterDTO data) {
-        if (userRepository.findByEmail(data.email()) != null) {
-            return ResponseEntity.badRequest().build();
-        }
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
 
-        User newUser = new User(data.name(), data.email(), encryptedPassword, UserRole.USER);
-
-        userRepository.save(newUser);
-
-        return ResponseEntity.ok().build();
+        return userService.resgiterUser(data);
 
     }
 }

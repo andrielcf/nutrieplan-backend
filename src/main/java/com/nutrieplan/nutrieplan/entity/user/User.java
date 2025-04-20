@@ -7,10 +7,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -28,14 +31,17 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
+    
+    @Column(unique = true, nullable = false)
     private String email;
 
-    private String name;
-
+    @Column(nullable = false)
     private String password;
 
     private UserRole role;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserProfile userProfile;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -45,12 +51,6 @@ public class User implements UserDetails {
             return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
-    public User(String name, String email, String password, UserRole role) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
 
     public User(String email, String password, UserRole role) {
         this.email = email;
