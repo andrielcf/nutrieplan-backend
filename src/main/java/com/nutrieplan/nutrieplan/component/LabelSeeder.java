@@ -51,8 +51,8 @@ public class LabelSeeder {
                     new HealthLabel(null, "vegetarian"),
                     new HealthLabel(null, "gluten-free"),
                     new HealthLabel(null, "dairy-free"),
-                    new HealthLabel(null, "peanut-free"),
-                    new HealthLabel(null, "tree-nut-free")));
+                    new HealthLabel(null, "fish-free")
+                    ));
         }
     }
 
