@@ -1,12 +1,15 @@
 package com.nutrieplan.nutrieplan.entity.user;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.nutrieplan.nutrieplan.entity.ActivityLevel;
+import com.nutrieplan.nutrieplan.entity.DailyPlan;
 import com.nutrieplan.nutrieplan.entity.DietLabel;
 import com.nutrieplan.nutrieplan.entity.Gender;
 import com.nutrieplan.nutrieplan.entity.HealthLabel;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -43,6 +47,9 @@ public class UserProfile {
     private Integer age;
 
     private Gender gender; // enum: MALE or FEMALE
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DailyPlan> dailyPlans = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "activity_level_id")

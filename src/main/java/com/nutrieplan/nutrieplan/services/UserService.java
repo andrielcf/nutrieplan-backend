@@ -1,5 +1,6 @@
 package com.nutrieplan.nutrieplan.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,8 +61,6 @@ public class UserService {
 
         User newUser = new User(data.email(), encryptedPassword, UserRole.USER);
 
-        userRepository.save(newUser);
-
         UserProfileDTO profileDTO = data.profile();
 
         UserProfile userProfile = new UserProfile();
@@ -84,6 +83,8 @@ public class UserService {
         List<HealthLabel> healthLabels = healthLabelRepository.findAllById(profileDTO.healthLabelsIds());
         userProfile.setHealthLabels(healthLabels);
 
+        // SAVE USER
+        userRepository.save(newUser);
         userProfileRepository.save(userProfile);
 
         return ResponseEntity.ok().build();
@@ -93,5 +94,26 @@ public class UserService {
     // public double calculateTDEE(UserProfile userProfile){
 
     // }
+
+    public String getHealt(String token) {
+
+        User user = userRepository.findByEmail(token);
+
+        UserProfile userProfile = user.getUserProfile();
+
+        System.out.println(userProfile.getHealthLabels());
+
+        List<HealthLabel> healthLabels = userProfile.getHealthLabels();
+
+        List<String> healthLablesList = new ArrayList<>();
+
+        for (HealthLabel healthLabel : healthLabels) {
+            System.out.println(healthLabel.getName());
+            healthLablesList.add(healthLabel.getName());
+        }
+        System.out.println(healthLablesList);
+
+        return user.getEmail();
+    }
 
 }
