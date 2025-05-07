@@ -27,8 +27,11 @@ public class MealRecipe {
     private String imageUrl;
     private String urlRecipe;
     private Double calories;
+    private Double carbohydrate;
+    private Double protein;
     private Double fat;
     private Double fiber;
+    private Double yield;
     private String prepareInstructions;
 
     @ManyToOne

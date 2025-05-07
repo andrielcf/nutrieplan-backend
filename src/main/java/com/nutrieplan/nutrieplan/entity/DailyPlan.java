@@ -1,5 +1,6 @@
 package com.nutrieplan.nutrieplan.entity;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,10 +32,10 @@ public class DailyPlan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String dayOfWeek;
+    // Dia da semana
+    private DayOfWeek dayOfWeek;
 
-    private LocalDateTime dateTime;
-
+    // Relação de usuario com dia e suas refeições
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserProfile user;

@@ -1,15 +1,16 @@
 package com.nutrieplan.nutrieplan.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+
+import com.nutrieplan.nutrieplan.entity.user.UserProfile;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,13 +28,20 @@ public class FoodLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime dateTime;
+    private LocalDate localdate;
+    private DayOfWeek dayOfWeek;
 
-    @ManyToMany
-    @JoinTable(name = "foodlog_mealtypes", joinColumns = @JoinColumn(name = "foodlog_id"), inverseJoinColumns = @JoinColumn(name = "mealtype_id"))
-    private List<MealType> mealTypes;
+    private String name; // Nome da MealType | Personalizado codinome usuario escolhe
+    private Double calories;
+    private Double carbohydrate;
+    private Double protein;
+    private Double fat;
+    private Double fiber;
+    private Double yield;
 
-    @ManyToMany
-    @JoinTable(name = "foodlog_mealrecipes", joinColumns = @JoinColumn(name = "foodlog_id"), inverseJoinColumns = @JoinColumn(name = "mealrecipe_id"))
-    private List<MealRecipe> mealRecipes;
+    // Relação com usuario que fez a refeição
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserProfile user;
+
 }

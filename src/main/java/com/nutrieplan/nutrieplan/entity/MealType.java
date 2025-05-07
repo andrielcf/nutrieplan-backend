@@ -29,8 +29,6 @@ public class MealType {
 
     private String mealType; // Ex: Lunch, Dinner, Snacks
 
-    private Boolean completed = false; // O usuário marcou a refeição como concluída?
-
     @ManyToOne
     @JoinColumn(name = "daily_plan_id")
     private DailyPlan dailyPlan;
