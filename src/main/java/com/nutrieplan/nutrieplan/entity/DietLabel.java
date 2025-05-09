@@ -24,5 +24,8 @@ public class DietLabel {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    private String consultDietLabel;
+    
+    @Column(nullable = false, unique = true)
     private String name;
 }
