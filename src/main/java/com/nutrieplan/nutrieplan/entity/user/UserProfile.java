@@ -48,6 +48,8 @@ public class UserProfile {
 
     private Gender gender; // enum: MALE or FEMALE
 
+    private Double tdee; // TDEE (Gasto Energético Diário Total)
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DailyPlan> dailyPlans = new ArrayList<>();
 

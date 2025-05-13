@@ -13,6 +13,7 @@ import com.nutrieplan.nutrieplan.dto.UserProfileDTO;
 import com.nutrieplan.nutrieplan.dto.authentication.RegisterDTO;
 import com.nutrieplan.nutrieplan.entity.ActivityLevel;
 import com.nutrieplan.nutrieplan.entity.DietLabel;
+import com.nutrieplan.nutrieplan.entity.Gender;
 import com.nutrieplan.nutrieplan.entity.HealthLabel;
 import com.nutrieplan.nutrieplan.entity.user.User;
 import com.nutrieplan.nutrieplan.entity.user.UserProfile;
@@ -69,12 +70,17 @@ public class UserService {
         userProfile.setName(data.profile().name());
         userProfile.setWeight(data.profile().weight());
         userProfile.setHeight(data.profile().height());
+        userProfile.setGender(data.profile().gender());
         userProfile.setAge(data.profile().age());
 
         ActivityLevel activityLevel = activityLevelRepository.findById(profileDTO.activityLevelId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid activity level ID"));
 
         userProfile.setActivityLevel(activityLevel);
+
+        userProfile.setTdee(calculateTDEE(userProfile));
+
+        System.out.println(userProfile.getTdee());
 
         DietLabel dietLabel = dietLabelRepository.findById(profileDTO.dietLabelId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid diet label ID"));
@@ -87,13 +93,32 @@ public class UserService {
         userRepository.save(newUser);
         userProfileRepository.save(userProfile);
 
+        calculateTDEE(userProfile);
+
         return ResponseEntity.ok().build();
     }
 
-    // Total daily energy expenditure
-    // public double calculateTDEE(UserProfile userProfile){
+    public double calculateTDEE(UserProfile userProfile) {
+        double tmb;
 
-    // }
+        if (userProfile.getGender() == Gender.MALE) {
+            tmb = (10 * userProfile.getWeight()) + (6.25 * userProfile.getHeight())
+                    - (5 * userProfile.getAge()) + 5;
+        } else {
+            tmb = (10 * userProfile.getWeight()) + (6.25 * userProfile.getHeight())
+                    - (5 * userProfile.getAge()) - 161;
+        }
+
+        ActivityLevel activityLevel = userProfile.getActivityLevel();
+        if (activityLevel == null) {
+            throw new IllegalArgumentException("Nível de atividade não definido para o usuário.");
+        }
+
+        double tdee = tmb * activityLevel.getFactor();
+
+        return Math.floor(tdee);
+
+    }
 
     public String getHealt(String token) {
 
