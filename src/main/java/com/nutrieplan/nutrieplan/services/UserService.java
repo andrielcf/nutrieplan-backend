@@ -25,6 +25,8 @@ import com.nutrieplan.nutrieplan.repositories.UserProfileRepository;
 import com.nutrieplan.nutrieplan.repositories.UserRepository;
 import com.nutrieplan.nutrieplan.security.TokenService;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class UserService {
     @Autowired
@@ -139,6 +141,16 @@ public class UserService {
         System.out.println(healthLablesList);
 
         return user.getEmail();
+    }
+
+    public UserProfile getUserProfileByEmail(String token) {
+
+        String email = tokenService.extractSubject(token);
+        User user = userRepository.findByEmail(email);
+        if (user != null && user.getUserProfile() != null) {
+            return user.getUserProfile();
+        }
+        throw new EntityNotFoundException("Perfil de usuário não encontrado para o e-mail: " + email);
     }
 
 }

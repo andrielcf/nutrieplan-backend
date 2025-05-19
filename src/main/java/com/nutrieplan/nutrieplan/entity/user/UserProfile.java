@@ -1,6 +1,6 @@
 package com.nutrieplan.nutrieplan.entity.user;
 
-import java.util.ArrayList;
+// import java.util.ArrayList;
 import java.util.List;
 
 import com.nutrieplan.nutrieplan.entity.ActivityLevel;
@@ -50,8 +50,8 @@ public class UserProfile {
 
     private Double tdee; // TDEE (Gasto Energético Diário Total)
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DailyPlan> dailyPlans = new ArrayList<>();
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private DailyPlan dailyPlans;
 
     @ManyToOne
     @JoinColumn(name = "activity_level_id")
