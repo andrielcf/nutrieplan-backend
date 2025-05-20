@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -19,7 +20,6 @@ import com.nutrieplan.nutrieplan.services.UserService;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-    
 
     @Autowired
     private UserService userService;
@@ -27,13 +27,12 @@ public class UserController {
     @Autowired
     private TokenService tokenService;
 
-
     // Testing GET's
     @GetMapping("/getall")
-    public ResponseEntity<List<User>> getAllUsers(){
+    public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
 
-        if(users.isEmpty()){
+        if (users.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
@@ -42,8 +41,8 @@ public class UserController {
 
     // Testing GET's
     @GetMapping("/gettoken")
-    public String getToken(@RequestHeader("Authorization") String token){
-        
+    public String getToken(@RequestHeader("Authorization") String token) {
+
         String tokenExtract = tokenService.extractSubject(token);
 
         return tokenExtract;
@@ -51,15 +50,23 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id){
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
         Optional<User> optionalUser = userService.getUserById(id);
 
-        if (optionalUser.isPresent()){
+        if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/details")
+    public String getHealthLabels(@RequestHeader("Authorization") String token){
+        
+        String tokenExtract = tokenService.extractSubject(token);
+        
+        return userService.getHealt(tokenExtract);
     }
 
 }
