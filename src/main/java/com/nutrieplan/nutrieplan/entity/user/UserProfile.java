@@ -3,6 +3,8 @@ package com.nutrieplan.nutrieplan.entity.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.nutrieplan.nutrieplan.entity.ActivityLevel;
 import com.nutrieplan.nutrieplan.entity.DailyPlan;
 import com.nutrieplan.nutrieplan.entity.DietLabel;

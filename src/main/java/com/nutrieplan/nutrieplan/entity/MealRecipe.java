@@ -1,5 +1,7 @@
 package com.nutrieplan.nutrieplan.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,5 +38,6 @@ public class MealRecipe {
 
     @ManyToOne
     @JoinColumn(name = "meal_type_id")
+    @JsonIgnore
     private MealType mealType;
 }

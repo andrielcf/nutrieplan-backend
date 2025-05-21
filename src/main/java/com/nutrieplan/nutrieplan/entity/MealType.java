@@ -2,6 +2,8 @@ package com.nutrieplan.nutrieplan.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,6 +33,7 @@ public class MealType {
 
     @ManyToOne
     @JoinColumn(name = "daily_plan_id")
+    @JsonIgnore
     private DailyPlan dailyPlan;
 
     @OneToMany(mappedBy = "mealType", cascade = CascadeType.ALL, orphanRemoval = true)
