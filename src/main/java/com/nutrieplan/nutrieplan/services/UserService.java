@@ -86,8 +86,6 @@ public class UserService {
 
         userProfile.setTdee(calculateTDEE(userProfile));
 
-        System.out.println(userProfile.getTdee());
-
         DietLabel dietLabel = dietLabelRepository.findById(profileDTO.dietLabelId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid diet label ID"));
         userProfile.setDietLabel(dietLabel);
