@@ -1,10 +1,8 @@
 package com.nutrieplan.nutrieplan.entity;
 
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nutrieplan.nutrieplan.entity.user.UserProfile;
 
@@ -44,6 +42,6 @@ public class DailyPlan {
     private UserProfile user;
 
     @OneToMany(mappedBy = "dailyPlan", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MealType> mealTypes;
+    private List<MealRecipe> mealRecipes;
 
 }

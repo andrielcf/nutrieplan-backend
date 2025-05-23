@@ -3,18 +3,21 @@ package com.nutrieplan.nutrieplan.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nutrieplan.nutrieplan.dto.DailyPlanDTO;
+import com.nutrieplan.nutrieplan.dto.MealRecipeDTO;
 import com.nutrieplan.nutrieplan.dto.UserProfileDTO;
 import com.nutrieplan.nutrieplan.dto.authentication.RegisterDTO;
 import com.nutrieplan.nutrieplan.entity.ActivityLevel;
+import com.nutrieplan.nutrieplan.entity.DailyPlan;
 import com.nutrieplan.nutrieplan.entity.DietLabel;
 import com.nutrieplan.nutrieplan.entity.Gender;
 import com.nutrieplan.nutrieplan.entity.HealthLabel;
+import com.nutrieplan.nutrieplan.entity.MealRecipe;
 import com.nutrieplan.nutrieplan.entity.user.User;
 import com.nutrieplan.nutrieplan.entity.user.UserProfile;
 import com.nutrieplan.nutrieplan.entity.user.UserRole;
@@ -26,6 +29,7 @@ import com.nutrieplan.nutrieplan.repositories.UserRepository;
 import com.nutrieplan.nutrieplan.security.TokenService;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 
 @Service
 public class UserService {
@@ -55,7 +59,7 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public ResponseEntity resgiterUser(RegisterDTO data) {
+    public ResponseEntity<?> resgiterUser(@Valid RegisterDTO data) {
 
         if (userRepository.findByEmail(data.email()) != null) {
             return ResponseEntity.badRequest().build();
@@ -91,11 +95,85 @@ public class UserService {
         List<HealthLabel> healthLabels = healthLabelRepository.findAllById(profileDTO.healthLabelsIds());
         userProfile.setHealthLabels(healthLabels);
 
+        // Monta os planos diários e refeições
+        List<DailyPlanDTO> dailyPlanDTOs = data.plans();
+        List<DailyPlan> dailyPlans = new ArrayList<>();
+
+        for (DailyPlanDTO dailyPlanDTO : dailyPlanDTOs) {
+            DailyPlan dailyPlan = new DailyPlan();
+            dailyPlan.setDayOfWeek(dailyPlanDTO.getDayOfWeek());
+            dailyPlan.setUser(userProfile);
+
+            List<MealRecipe> meals = new ArrayList<>();
+            for (MealRecipeDTO mealDTO : dailyPlanDTO.getMeals()) {
+                MealRecipe meal = new MealRecipe();
+                meal.setMealType(mealDTO.getMealType());
+                meal.setUriEdamam(mealDTO.getUriEdamam());
+                meal.setImageUrl(mealDTO.getImageUrl());
+                meal.setUrlRecipe(mealDTO.getUrlRecipe());
+                meal.setCalories(mealDTO.getCalories());
+                meal.setCarbohydrate(mealDTO.getCarbohydrate());
+                meal.setProtein(mealDTO.getProtein());
+                meal.setFat(mealDTO.getFat());
+                meal.setFiber(mealDTO.getFiber());
+                meal.setYield(mealDTO.getYield());
+                meal.setPrepareInstructions(mealDTO.getPrepareInstructions());
+                meal.setDailyPlan(dailyPlan);
+
+                meals.add(meal);
+            }
+
+            dailyPlan.setMealRecipes(meals);
+            dailyPlans.add(dailyPlan);
+        }
+
+        userProfile.setDailyPlans(dailyPlans);
+
         // SAVE USER
         userRepository.save(newUser);
         userProfileRepository.save(userProfile);
 
-        calculateTDEE(userProfile);
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<?> reBuildDailyPlan(List<DailyPlanDTO> planDTO, UserProfile userProfile) {
+
+        // 1. Remove planos antigos (se necessário)
+        if (userProfile.getDailyPlans() != null && !userProfile.getDailyPlans().isEmpty()) {
+            userProfile.getDailyPlans().clear();
+        }
+
+        // Monta os planos diários e refeições
+        List<DailyPlanDTO> dailyPlanDTOs = planDTO;
+        List<DailyPlan> dailyPlans = new ArrayList<>();
+
+        for (DailyPlanDTO dailyPlanDTO : dailyPlanDTOs) {
+            DailyPlan dailyPlan = new DailyPlan();
+            dailyPlan.setDayOfWeek(dailyPlanDTO.getDayOfWeek());
+            dailyPlan.setUser(userProfile);
+
+            List<MealRecipe> meals = new ArrayList<>();
+            for (MealRecipeDTO mealDTO : dailyPlanDTO.getMeals()) {
+                MealRecipe meal = new MealRecipe();
+                meal.setMealType(mealDTO.getMealType());
+                meal.setUriEdamam(mealDTO.getUriEdamam());
+                meal.setImageUrl(mealDTO.getImageUrl());
+                meal.setUrlRecipe(mealDTO.getUrlRecipe());
+                meal.setCalories(mealDTO.getCalories());
+                meal.setCarbohydrate(mealDTO.getCarbohydrate());
+                meal.setProtein(mealDTO.getProtein());
+                meal.setFat(mealDTO.getFat());
+                meal.setFiber(mealDTO.getFiber());
+                meal.setYield(mealDTO.getYield());
+                meal.setPrepareInstructions(mealDTO.getPrepareInstructions());
+                meal.setDailyPlan(dailyPlan);
+
+                meals.add(meal);
+            }
+
+            dailyPlan.setMealRecipes(meals);
+            dailyPlans.add(dailyPlan);
+        }
 
         return ResponseEntity.ok().build();
     }

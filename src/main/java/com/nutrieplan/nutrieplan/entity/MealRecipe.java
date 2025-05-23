@@ -25,6 +25,7 @@ public class MealRecipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String mealType;
     private String uriEdamam;
     private String imageUrl;
     private String urlRecipe;
@@ -37,7 +38,7 @@ public class MealRecipe {
     private String prepareInstructions;
 
     @ManyToOne
-    @JoinColumn(name = "meal_type_id")
+    @JoinColumn(name = "daily_plan_id")
     @JsonIgnore
-    private MealType mealType;
+    private DailyPlan dailyPlan;
 }
