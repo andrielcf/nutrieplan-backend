@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,7 +55,7 @@ public class AuthenticationController {
     private ActivityLevelRepository activityLevelRepository;
 
     @PostMapping("/login")
-    public ResponseEntity login(@Valid @RequestBody AuthenticationDTO data) {
+    public ResponseEntity<?> login(@Valid @RequestBody AuthenticationDTO data) {
 
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
 
@@ -69,7 +67,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity resgister(@Valid @RequestBody RegisterDTO data) {
+    public ResponseEntity<?> resgister(@Valid @RequestBody RegisterDTO data) {
 
         return userService.resgiterUser(data);
 

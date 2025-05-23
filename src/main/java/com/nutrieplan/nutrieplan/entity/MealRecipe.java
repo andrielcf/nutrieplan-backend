@@ -1,10 +1,14 @@
 package com.nutrieplan.nutrieplan.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -23,7 +27,10 @@ public class MealRecipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String mealType;
     private String uriEdamam;
+    // @Column(length = 1000)
+    @Lob
     private String imageUrl;
     private String urlRecipe;
     private Double calories;
@@ -32,9 +39,11 @@ public class MealRecipe {
     private Double fat;
     private Double fiber;
     private Double yield;
+    @Lob
     private String prepareInstructions;
 
     @ManyToOne
-    @JoinColumn(name = "meal_type_id")
-    private MealType mealType;
+    @JoinColumn(name = "daily_plan_id")
+    @JsonIgnore
+    private DailyPlan dailyPlan;
 }
