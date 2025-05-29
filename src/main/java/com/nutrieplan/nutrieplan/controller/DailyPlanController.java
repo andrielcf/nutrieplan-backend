@@ -14,12 +14,12 @@ import com.nutrieplan.nutrieplan.services.DailyService;
 @RestController
 @RequestMapping("/api/dia")
 public class DailyPlanController {
-    
+
     @Autowired
     private DailyService dailyService;
 
-    @GetMapping("")
-    public List<DailyPlan> getFullDailyPlan(@RequestHeader("Authorization") String token){
+    @GetMapping("/full")
+    public List<DailyPlan> getFullDailyPlan(@RequestHeader("Authorization") String token) {
 
         List<DailyPlan> dailyPlan = dailyService.getDailyPlan(token);
 

@@ -97,6 +97,8 @@ public class UserService {
         List<DailyPlanDTO> dailyPlanDTOs = data.plans();
         List<DailyPlan> dailyPlans = new ArrayList<>();
 
+        Boolean convertDinner = true;
+
         for (DailyPlanDTO dailyPlanDTO : dailyPlanDTOs) {
             DailyPlan dailyPlan = new DailyPlan();
             dailyPlan.setDayOfWeek(dailyPlanDTO.getDayOfWeek());
@@ -105,7 +107,25 @@ public class UserService {
             List<MealRecipe> meals = new ArrayList<>();
             for (MealRecipeDTO mealDTO : dailyPlanDTO.getMeals()) {
                 MealRecipe meal = new MealRecipe();
-                meal.setMealType(mealDTO.getMealType());
+
+                if ("Lunch/dinner".equals(mealDTO.getMealType()) && convertDinner) {
+
+                    System.out.println("Set to Launch and convert to False");
+
+                    convertDinner = false;
+                    meal.setMealType("Lunch");
+
+                    System.out.println(mealDTO.getMealType());
+                } else if ("Lunch/dinner".equals(mealDTO.getMealType()) && !convertDinner) {
+                    System.out.println("Set to Dinner and convert to True");
+
+                    convertDinner = true;
+                    meal.setMealType("Dinner");
+                    System.out.println(mealDTO.getMealType());
+                } else {
+
+                    meal.setMealType(mealDTO.getMealType());
+                }
                 meal.setUriEdamam(mealDTO.getUriEdamam());
                 meal.setImageUrl(mealDTO.getImageUrl());
                 meal.setUrlRecipe(mealDTO.getUrlRecipe());
@@ -117,7 +137,6 @@ public class UserService {
                 meal.setYield(mealDTO.getYield());
                 meal.setPrepareInstructions(mealDTO.getPrepareInstructions());
                 meal.setDailyPlan(dailyPlan);
-
                 meals.add(meal);
             }
 
