@@ -110,22 +110,35 @@ public class UserService {
 
                 if ("Lunch/dinner".equals(mealDTO.getMealType()) && convertDinner) {
 
-                    System.out.println("Set to Launch and convert to False");
-
                     convertDinner = false;
                     meal.setMealType("Lunch");
-
-                    System.out.println(mealDTO.getMealType());
                 } else if ("Lunch/dinner".equals(mealDTO.getMealType()) && !convertDinner) {
-                    System.out.println("Set to Dinner and convert to True");
 
                     convertDinner = true;
                     meal.setMealType("Dinner");
-                    System.out.println(mealDTO.getMealType());
                 } else {
 
                     meal.setMealType(mealDTO.getMealType());
                 }
+
+                double mealPercentage = switch (meal.getMealType()) {
+                    case "Breakfast" -> 0.20;
+                    case "Lunch" -> 0.40;
+                    case "Dinner" -> 0.40;
+                    default -> 0.0;
+                };
+
+                Double targetCalories = calculateTDEE(userProfile) * mealPercentage;
+                System.out.println("/////////////////////////////////////////////");
+                System.out.println("Voce vai consumir " + mealPercentage + "% de Kcal no" + meal.getMealType() + ": " + targetCalories);
+                
+                Double yieldConsume = targetCalories / (mealDTO.getCalories() / mealDTO.getYield());
+                System.out.println("| Refeição de " + meal.getMealType() + "\n| Total de Kacl: " + mealDTO.getCalories());
+                System.out.println("| Total de Kacl por porção: " + mealDTO.getCalories() / mealDTO.getYield());
+                System.out.println("| Total de porção original: " + mealDTO.getYield());
+                System.out.println("| Calculo de KCAL no "+ meal.getMealType() + ": " +  (mealDTO.getCalories() / mealDTO.getYield()) * yieldConsume);
+                
+
                 meal.setUriEdamam(mealDTO.getUriEdamam());
                 meal.setImageUrl(mealDTO.getImageUrl());
                 meal.setUrlRecipe(mealDTO.getUrlRecipe());
@@ -134,6 +147,7 @@ public class UserService {
                 meal.setProtein(mealDTO.getProtein());
                 meal.setFat(mealDTO.getFat());
                 meal.setFiber(mealDTO.getFiber());
+                meal.setConsumeYield(yieldConsume);
                 meal.setYield(mealDTO.getYield());
                 meal.setPrepareInstructions(mealDTO.getPrepareInstructions());
                 meal.setDailyPlan(dailyPlan);

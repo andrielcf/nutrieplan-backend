@@ -38,6 +38,7 @@ public class MealRecipe {
     private Double protein;
     private Double fat;
     private Double fiber;
+    private Double consumeYield;
     private Double yield;
     @Lob
     private String prepareInstructions;
