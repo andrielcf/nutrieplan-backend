@@ -123,8 +123,8 @@ public class UserService {
 
                 double mealPercentage = switch (meal.getMealType()) {
                     case "Breakfast" -> 0.20;
-                    case "Lunch" -> 0.40;
-                    case "Dinner" -> 0.40;
+                    case "Lunch" -> 0.38;
+                    case "Dinner" -> 0.42;
                     default -> 0.0;
                 };
 
