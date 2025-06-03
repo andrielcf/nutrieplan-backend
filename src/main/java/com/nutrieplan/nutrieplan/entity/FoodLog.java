@@ -3,6 +3,7 @@ package com.nutrieplan.nutrieplan.entity;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nutrieplan.nutrieplan.entity.user.UserProfile;
 
 import jakarta.persistence.Entity;
@@ -28,7 +29,7 @@ public class FoodLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate localdate;
+    private LocalDate date;
     private DayOfWeek dayOfWeek;
 
     private String name; // Nome da MealType | Personalizado codinome usuario escolhe
@@ -42,6 +43,7 @@ public class FoodLog {
     // Relação com usuario que fez a refeição
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UserProfile user;
+    @JsonIgnore
+    private UserProfile userProfile;
 
 }
