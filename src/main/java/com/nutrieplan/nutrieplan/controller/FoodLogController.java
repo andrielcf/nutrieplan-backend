@@ -32,7 +32,8 @@ public class FoodLogController {
     private FoodLogService foodLogService;
 
     @PostMapping("/consume")
-    public ResponseEntity<?> consumeRecipe(@RequestHeader("Authorization") String token ,@RequestBody @Valid FoodlogDTO foodlogDTO){
+    public ResponseEntity<?> consumeRecipe(@RequestHeader("Authorization") String token,
+            @RequestBody @Valid FoodlogDTO foodlogDTO) {
 
         UserProfile userProfile = userService.getUserProfileByEmail(token);
 
@@ -42,11 +43,9 @@ public class FoodLogController {
     }
 
     @GetMapping("/selected-date")
-    public List<FoodLog> getSelectedDate(@RequestHeader("Authorization") String token ,@RequestParam LocalDate date){
+    public List<FoodLog> getSelectedDate(@RequestHeader("Authorization") String token, @RequestParam LocalDate date) {
 
         UserProfile userProfile = userService.getUserProfileByEmail(token);
-
-        System.out.println(date);
         List<FoodLog> foodLogs = foodLogService.getSelectedDate(userProfile, date);
 
         return foodLogs;
