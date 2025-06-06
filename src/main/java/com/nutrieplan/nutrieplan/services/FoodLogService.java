@@ -36,4 +36,16 @@ public class FoodLogService {
         return foodLogs;
     }
 
+    public ResponseEntity<?> deleteConsumeMeal(UserProfile userProfile, Long id) {
+
+        if (foodLogRepository.findByUserProfileAndId(userProfile, id).isPresent()) {
+
+            foodLogRepository.deleteById(id);
+
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
 }

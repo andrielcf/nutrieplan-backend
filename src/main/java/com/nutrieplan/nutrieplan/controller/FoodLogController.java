@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +33,8 @@ public class FoodLogController {
     private FoodLogService foodLogService;
 
     @PostMapping("/consume")
-    public ResponseEntity<?> consumeRecipe(@RequestHeader("Authorization") String token ,@RequestBody @Valid FoodlogDTO foodlogDTO){
+    public ResponseEntity<?> consumeRecipe(@RequestHeader("Authorization") String token,
+            @RequestBody @Valid FoodlogDTO foodlogDTO) {
 
         UserProfile userProfile = userService.getUserProfileByEmail(token);
 
@@ -42,13 +44,19 @@ public class FoodLogController {
     }
 
     @GetMapping("/selected-date")
-    public List<FoodLog> getSelectedDate(@RequestHeader("Authorization") String token ,@RequestParam LocalDate date){
+    public List<FoodLog> getSelectedDate(@RequestHeader("Authorization") String token, @RequestParam LocalDate date) {
 
         UserProfile userProfile = userService.getUserProfileByEmail(token);
-
-        System.out.println(date);
         List<FoodLog> foodLogs = foodLogService.getSelectedDate(userProfile, date);
 
         return foodLogs;
+    }
+
+    @DeleteMapping("/meal-remove")
+    public ResponseEntity<?> removeConsumeMeal(@RequestHeader("Authorization") String token, @RequestParam Long id){
+
+        UserProfile userProfile = userService.getUserProfileByEmail(token);
+        
+        return foodLogService.deleteConsumeMeal(userProfile, id);
     }
 }

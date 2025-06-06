@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nutrieplan.nutrieplan.entity.user.User;
+import com.nutrieplan.nutrieplan.entity.user.UserProfile;
 import com.nutrieplan.nutrieplan.security.TokenService;
 import com.nutrieplan.nutrieplan.services.UserService;
 
@@ -61,11 +62,21 @@ public class UserController {
     }
 
     @GetMapping("/details")
-    public String getHealthLabels(@RequestHeader("Authorization") String token){
-        
+    public String getHealthLabels(@RequestHeader("Authorization") String token) {
+
         String tokenExtract = tokenService.extractSubject(token);
-        
+
         return userService.getHealt(tokenExtract);
+    }
+
+    @GetMapping("/tdee")
+    public Double getTdee(@RequestHeader("Authorization") String token) {
+
+        UserProfile userProfile = userService.getUserProfileByEmail(token);
+
+        Double tdee = userProfile.getTdee();
+
+        return tdee;
     }
 
 }
