@@ -19,10 +19,12 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Table(name = "users_details")
 @Entity(name = "users_details")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -31,7 +33,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    
+
     @Column(unique = true, nullable = false)
     private String email;
 
@@ -50,7 +52,6 @@ public class User implements UserDetails {
         else
             return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
-
 
     public User(String email, String password, UserRole role) {
         this.email = email;
