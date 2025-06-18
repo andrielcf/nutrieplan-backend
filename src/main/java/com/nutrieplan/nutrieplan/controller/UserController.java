@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nutrieplan.nutrieplan.dto.MealPlannerReponse;
 import com.nutrieplan.nutrieplan.entity.user.User;
 import com.nutrieplan.nutrieplan.entity.user.UserProfile;
 import com.nutrieplan.nutrieplan.security.TokenService;
@@ -77,6 +78,15 @@ public class UserController {
         Double tdee = userProfile.getTdee();
 
         return tdee;
+    }
+
+    @GetMapping("/meal-details")
+    public ResponseEntity<MealPlannerReponse> getMealDetails(@RequestHeader("Authorization") String token){
+
+        
+        MealPlannerReponse mealPlannerReponse = userService.getMealPlannerDetails(userService.getUserProfileByEmail(token));
+
+        return ResponseEntity.ok(mealPlannerReponse);
     }
 
 }
