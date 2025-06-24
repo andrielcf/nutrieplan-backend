@@ -17,8 +17,6 @@ import com.nutrieplan.nutrieplan.entity.user.UserProfile;
 import com.nutrieplan.nutrieplan.services.DailyService;
 import com.nutrieplan.nutrieplan.services.UserService;
 
-import jakarta.validation.Valid;
-
 @RestController
 @RequestMapping("/api/dia")
 public class DailyPlanController {
@@ -38,13 +36,13 @@ public class DailyPlanController {
     }
 
     @PutMapping("/rebuildplan")
-    public ResponseEntity<?> reBuildDailyPlan(@RequestHeader("Authorization") String token, @RequestBody List<@Valid DailyPlanDTO> plans ){
+    public ResponseEntity<?> reBuildDailyPlan(@RequestHeader("Authorization") String token,
+            @RequestBody List<DailyPlanDTO> plans) {
         System.out.println("Formando Dias");
-        
+
         UserProfile userProfile = userService.getUserProfileByEmail(token);
 
         dailyService.reBuildDailyPlan(userProfile, plans);
-
 
         return ResponseEntity.ok().build();
     }
