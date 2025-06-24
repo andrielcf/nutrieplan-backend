@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nutrieplan.nutrieplan.dto.DailyPlanDTO;
+import com.nutrieplan.nutrieplan.dto.MealPlannerReponse;
 import com.nutrieplan.nutrieplan.dto.MealRecipeDTO;
 import com.nutrieplan.nutrieplan.dto.UserProfileDTO;
 import com.nutrieplan.nutrieplan.dto.authentication.RegisterDTO;
@@ -260,6 +261,24 @@ public class UserService {
             return user.getUserProfile();
         }
         throw new EntityNotFoundException("Perfil de usuário não encontrado para o e-mail: " + email);
+    }
+
+    public MealPlannerReponse getMealPlannerDetails(UserProfile userProfile){
+
+        MealPlannerReponse mealPlannerDetails = new MealPlannerReponse();
+
+        mealPlannerDetails.setTdee(userProfile.getTdee());
+
+        List<String> healthLabels = new ArrayList<>();
+
+        mealPlannerDetails.setDietLabels(userProfile.getDietLabel().getConsultDietLabel());
+        
+        for (HealthLabel healthLabel : userProfile.getHealthLabels()) {
+            healthLabels.add(healthLabel.getConsultHealthLabel());
+        }
+        mealPlannerDetails.setHealthLabels(healthLabels);
+
+        return mealPlannerDetails;
     }
 
 }
