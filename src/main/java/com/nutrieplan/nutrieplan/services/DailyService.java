@@ -13,7 +13,6 @@ import com.nutrieplan.nutrieplan.entity.DailyPlan;
 import com.nutrieplan.nutrieplan.entity.MealRecipe;
 import com.nutrieplan.nutrieplan.entity.user.UserProfile;
 import com.nutrieplan.nutrieplan.repositories.UserProfileRepository;
-import com.nutrieplan.nutrieplan.repositories.UserRepository;
 
 import jakarta.validation.Valid;
 
@@ -39,7 +38,7 @@ public class DailyService {
         if (userProfile.getDailyPlans() == null) {
             userProfile.setDailyPlans(new ArrayList<>());
         } else {
-            userProfile.getDailyPlans().clear(); // Isso já é suficiente
+            userProfile.getDailyPlans().clear();
         }
 
         // Monta os planos diários e refeições
