@@ -37,6 +37,8 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.GET, "/api/auth/resgister-activitylevel").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/resgister-dietlabel").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/resgister-healthlabel").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/forgot-password").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/reset-password").permitAll()
                         .anyRequest().authenticated())
 
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
