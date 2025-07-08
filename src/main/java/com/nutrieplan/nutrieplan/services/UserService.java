@@ -131,14 +131,16 @@ public class UserService {
 
                 Double targetCalories = calculateTDEE(userProfile) * mealPercentage;
                 System.out.println("/////////////////////////////////////////////");
-                System.out.println("Voce vai consumir " + mealPercentage + "% de Kcal no" + meal.getMealType() + ": " + targetCalories);
-                
+                System.out.println("Voce vai consumir " + mealPercentage + "% de Kcal no" + meal.getMealType() + ": "
+                        + targetCalories);
+
                 Double yieldConsume = targetCalories / (mealDTO.getCalories() / mealDTO.getYield());
-                System.out.println("| Refeição de " + meal.getMealType() + "\n| Total de Kacl: " + mealDTO.getCalories());
+                System.out
+                        .println("| Refeição de " + meal.getMealType() + "\n| Total de Kacl: " + mealDTO.getCalories());
                 System.out.println("| Total de Kacl por porção: " + mealDTO.getCalories() / mealDTO.getYield());
                 System.out.println("| Total de porção original: " + mealDTO.getYield());
-                System.out.println("| Calculo de KCAL no "+ meal.getMealType() + ": " +  (mealDTO.getCalories() / mealDTO.getYield()) * yieldConsume);
-                
+                System.out.println("| Calculo de KCAL no " + meal.getMealType() + ": "
+                        + (mealDTO.getCalories() / mealDTO.getYield()) * yieldConsume);
 
                 meal.setUriEdamam(mealDTO.getUriEdamam());
                 meal.setImageUrl(mealDTO.getImageUrl());
@@ -165,6 +167,62 @@ public class UserService {
         userRepository.save(newUser);
         userProfileRepository.save(userProfile);
 
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<?> userProfileUpdate(UserProfile userProfile, UserProfileDTO userProfileDTO) {
+
+        // Atualizar campos básicos
+        if (userProfileDTO.name() != null) {
+            userProfile.setName(userProfileDTO.name());
+        }
+
+        if (userProfileDTO.weight() != null) {
+            userProfile.setWeight(userProfileDTO.weight());
+        }
+
+        if (userProfileDTO.height() != null) {
+            userProfile.setHeight(userProfileDTO.height());
+        }
+
+        if (userProfileDTO.age() != null) {
+            userProfile.setAge(userProfileDTO.age());
+        }
+
+        if (userProfileDTO.gender() != null) {
+            userProfile.setGender(userProfileDTO.gender());
+        }
+
+        // Atualizar ActivityLevel
+        if (userProfileDTO.activityLevelId() != null) {
+            ActivityLevel activityLevel = activityLevelRepository.findById(userProfileDTO.activityLevelId()).get();
+            userProfile.setActivityLevel(activityLevel);
+        }
+
+        // Atualizar DietLabel
+        if (userProfileDTO.dietLabelId() != null) {
+            DietLabel dietLabel = dietLabelRepository.findById(userProfileDTO.dietLabelId()).get();
+            userProfile.setDietLabel(dietLabel);
+        }
+
+        // Atualizar HealthLabels (melhorado)
+        if (userProfileDTO.healthLabelsIds() != null) {
+            List<HealthLabel> newHealthLabels = healthLabelRepository.findAllById(userProfileDTO.healthLabelsIds());
+
+            // Limpa as associações existentes
+            userProfile.getHealthLabels().clear();
+
+            // Adiciona as novas associações
+            userProfile.getHealthLabels().addAll(newHealthLabels);
+        }
+
+        // Recalcular TDEE
+        double newTDEE = calculateTDEE(userProfile);
+        userProfile.setTdee(newTDEE);
+
+        userProfileRepository.save(userProfile);
+
+        System.out.println("Usuário atualizado com sucesso");
         return ResponseEntity.ok().build();
     }
 
@@ -263,7 +321,14 @@ public class UserService {
         throw new EntityNotFoundException("Perfil de usuário não encontrado para o e-mail: " + email);
     }
 
-    public MealPlannerReponse getMealPlannerDetails(UserProfile userProfile){
+    public ResponseEntity<?> deleteUser(UserProfile userProfile){
+
+        userRepository.delete(userProfile.getUser());
+        
+        return ResponseEntity.ok().build();
+    }
+
+    public MealPlannerReponse getMealPlannerDetails(UserProfile userProfile) {
 
         MealPlannerReponse mealPlannerDetails = new MealPlannerReponse();
 
@@ -272,7 +337,7 @@ public class UserService {
         List<String> healthLabels = new ArrayList<>();
 
         mealPlannerDetails.setDietLabels(userProfile.getDietLabel().getConsultDietLabel());
-        
+
         for (HealthLabel healthLabel : userProfile.getHealthLabels()) {
             healthLabels.add(healthLabel.getConsultHealthLabel());
         }

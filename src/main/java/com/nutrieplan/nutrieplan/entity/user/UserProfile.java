@@ -5,6 +5,7 @@ import java.util.List;
 import com.nutrieplan.nutrieplan.entity.ActivityLevel;
 import com.nutrieplan.nutrieplan.entity.DailyPlan;
 import com.nutrieplan.nutrieplan.entity.DietLabel;
+import com.nutrieplan.nutrieplan.entity.FoodLog;
 import com.nutrieplan.nutrieplan.entity.Gender;
 import com.nutrieplan.nutrieplan.entity.HealthLabel;
 
@@ -67,5 +68,8 @@ public class UserProfile {
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FoodLog> foodLogs = new ArrayList<>();
 
 }
