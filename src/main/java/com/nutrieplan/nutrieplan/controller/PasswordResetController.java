@@ -18,6 +18,8 @@ import com.nutrieplan.nutrieplan.entity.user.PasswordReset.PasswordResetRequestD
 import com.nutrieplan.nutrieplan.repositories.UserRepository;
 import com.nutrieplan.nutrieplan.services.PasswordResetTokenService;
 
+import jakarta.mail.MessagingException;
+
 @RestController
 @RequestMapping("/api/auth")
 public class PasswordResetController {
@@ -29,7 +31,7 @@ public class PasswordResetController {
     private UserRepository userRepository;
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestBody PasswordResetRequestDto request) {
+    public ResponseEntity<?> forgotPassword(@RequestBody PasswordResetRequestDto request) throws MessagingException {
         User user = userRepository.findByEmail(request.getEmail());
         if (user == null) {
             return ResponseEntity.badRequest().body("E-mail não encontrado");
